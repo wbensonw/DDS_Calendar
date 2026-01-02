@@ -99,20 +99,64 @@ class CalendarApp {
         
         // 校曆重要日期
         this.schoolEvents = {
+            // 2025年 八月
+            '2025-08-25': { type: 'event', title: '第一學期開學日', description: '2025/2026學年第一學期開始', time: '全天' },
+            
+            // 2025年 十月
+            '2025-10-01': { type: 'holiday', title: '國慶日', description: '中華人民共和國國慶日', time: '全天' },
+            '2025-10-02': { type: 'holiday', title: '國慶日翌日', description: '中華人民共和國國慶日翌日', time: '全天' },
+            '2025-10-07': { type: 'holiday', title: '中秋節翌日', description: '中秋節翌日假期', time: '全天' },
+            '2025-10-29': { type: 'holiday', title: '重陽節', description: '重陽節假期', time: '全天' },
+            
+            // 2025年 十一月
+            '2025-11-02': { type: 'holiday', title: '追思節', description: '追思節', time: '全天' },
+            '2025-11-03': { type: 'holiday', title: '追思節補假', description: '追思節補假', time: '全天' },
+            '2025-11-07': { type: 'event', title: '教學評鑑', description: '第一學期教學評鑑網絡調查開始', time: '全天' },
+            '2025-11-09': { type: 'event', title: '全運會', description: '第十五屆全運會 (至11月21日)', time: '全天' },
+            
+            // 2025年 十二月
+            '2025-12-08': { type: 'holiday', title: '聖母無原罪瞻禮', description: '聖母無原罪瞻禮', time: '全天' },
+            '2025-12-09': { type: 'event', title: '考試週開始', description: '第一學期考試週 (至12月17日)', time: '全天' },
+            '2025-12-18': { type: 'event', title: '寒假開始', description: '寒假開始 (至2026年1月26日)', time: '全天' },
+            '2025-12-20': { type: 'holiday', title: '特區紀念日', description: '澳門特別行政區成立紀念日', time: '全天' },
+            '2025-12-21': { type: 'holiday', title: '特區紀念日補假', description: '澳門特別行政區成立紀念日補假', time: '全天' },
+            '2025-12-22': { type: 'holiday', title: '冬至', description: '冬至', time: '全天' },
+            '2025-12-23': { type: 'holiday', title: '冬至補假', description: '冬至補假', time: '全天' },
+            '2025-12-24': { type: 'holiday', title: '聖誕節前日', description: '聖誕節前日', time: '全天' },
+            '2025-12-25': { type: 'holiday', title: '聖誕節', description: '聖誕節', time: '全天' },
+            
+            // 2026年 一月
             '2026-01-01': { type: 'holiday', title: '元旦', description: '新年假期', time: '全天' },
+            '2026-01-05': { type: 'event', title: '第二學期開學日', description: '第二學期開始上課', time: '全天' },
+            '2026-01-08': { type: 'event', title: '成績公佈', description: '第一學期成績公佈', time: '全天' },
+            
+            // 2026年 二月
+            '2026-02-16': { type: 'holiday', title: '農曆除夕', description: '農曆除夕 (下午)', time: '下午' },
             '2026-02-17': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
             '2026-02-18': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
             '2026-02-19': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
-            '2026-03-30': { type: 'holiday', title: '復活節', description: '復活節假期', time: '全天' },
-            '2026-03-31': { type: 'holiday', title: '復活節', description: '復活節假期', time: '全天' },
-            '2026-04-04': { type: 'holiday', title: '清明節', description: '清明節假期', time: '全天' },
+            
+            // 2026年 三月
+            '2026-03-02': { type: 'event', title: '恢復上課', description: '假期結束，恢復上課', time: '全天' },
+            '2026-03-28': { type: 'event', title: '校慶日', description: '澳門城市大學校慶日', time: '全天' },
+            
+            // 2026年 四月
+            '2026-04-03': { type: 'holiday', title: '耶穌受難日', description: '耶穌受難日假期', time: '全天' },
+            '2026-04-04': { type: 'holiday', title: '復活節前日', description: '復活節前日及清明節', time: '全天' },
+            '2026-04-06': { type: 'holiday', title: '補假', description: '復活節及清明節補假', time: '全天' },
+            '2026-04-07': { type: 'holiday', title: '補假', description: '復活節及清明節補假', time: '全天' },
+            '2026-04-24': { type: 'event', title: '緩考申請', description: '緩考申請開始', time: '全天' },
+            
+            // 2026年 五月
             '2026-05-01': { type: 'holiday', title: '勞動節', description: '勞動節假期', time: '全天' },
-            '2026-05-02': { type: 'event', title: '學期結束', description: '第二學期課程結束', time: '全天' },
-            // 保留2025年的部分重要日期供查閱
-            '2025-12-20': { type: 'holiday', title: '澳門特區成立紀念日', description: '澳門特區成立紀念日', time: '全天' },
-            '2025-12-22': { type: 'holiday', title: '冬至', description: '冬至', time: '全天' },
-            '2025-12-24': { type: 'holiday', title: '聖誕節前夕', description: '聖誕節前夕', time: '全天' },
-            '2025-12-25': { type: 'holiday', title: '聖誕節', description: '聖誕節', time: '全天' }
+            '2026-05-04': { type: 'event', title: '考試週開始', description: '第二學期考試週 (至5月12日)', time: '全天' },
+            '2026-05-21': { type: 'event', title: '成績公佈', description: '第二學期考試成績公佈', time: '全天' },
+            '2026-05-24': { type: 'holiday', title: '佛誕節', description: '佛誕節', time: '全天' },
+            '2026-05-25': { type: 'holiday', title: '佛誕節補假', description: '佛誕節補假', time: '全天' },
+            '2026-05-31': { type: 'event', title: '學年結束', description: '2025/2026學年結束日', time: '全天' },
+            
+            // 2026年 六月
+            '2026-06-19': { type: 'holiday', title: '端午節', description: '端午節假期', time: '全天' }
         };
         
         // 月份名稱
