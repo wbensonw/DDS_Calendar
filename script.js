@@ -1,56 +1,94 @@
 // 月曆應用程式主要邏輯
 class CalendarApp {
     constructor() {
+        // 設定初始顯示為2026年1月
         this.currentDate = new Date();
-        this.currentYear = 2025;
-        this.currentMonth = 7; // 8月 (0-based)
+        // 為了讓用戶直接看到新學期，預設顯示2026年1月
+        // 如果當前時間已經是2026年或更晚，則使用當前時間
+        const now = new Date();
+        if (now.getFullYear() >= 2026) {
+            this.currentYear = now.getFullYear();
+            this.currentMonth = now.getMonth();
+        } else {
+            this.currentYear = 2026;
+            this.currentMonth = 0; // 1月
+        }
+        
         this.today = new Date();
         
-        // 課程數據 - 根據課程表
+        // 課程數據 - 2026春季課程表
+        // 舊課程保留但註釋掉，或者我們可以根據日期動態決定顯示哪些課程
+        // 為了簡單起見，這裡主要配置新學期課程
         this.courses = {
-            'DNS001': {
-                name: 'DNS001',
-                title: '數據科學前沿分析研究',
+            'DNS012': {
+                name: 'DNS012',
+                title: '人工智慧與貝葉斯分析',
                 day: 2, // 星期二
                 time: '09:00-12:00',
-                color: 'dns001',
+                color: 'dns012',
                 location: 'N104'
             },
-            'DNS002': {
-                name: 'DNS002', 
-                title: '數據挖掘理論、系統與技術',
-                day: 4, // 星期四
-                time: '15:30-18:30',
-                color: 'dns002',
-                location: 'N104'
-            },
-            'DNS003': {
-                name: 'DNS003',
-                title: '大數據決策與應用', 
-                day: 1, // 星期一
+            'DNS013': {
+                name: 'DNS013', 
+                title: '社交網路分析',
+                day: 5, // 星期五
                 time: '12:15-15:15',
-                color: 'dns003',
+                color: 'dns013',
                 location: 'N104'
             },
-            'DNS016': {
-                name: 'DNS016',
-                title: '智慧城市發展的數據建築',
-                day: 5, // 星期五  
-                time: '09:00-12:00',
-                color: 'dns016',
+            'DNS015': {
+                name: 'DNS015',
+                title: '數據分析與商業智慧', 
+                day: 4, // 星期四
+                time: '12:15-15:15',
+                color: 'dns015',
                 location: 'N104'
             }
+            // DNS004 是專題項目，無固定上課時間，不顯示在網格中
         };
         
-        // 課程期間：2025年8月25日至12月6日
-        this.semesterStart = new Date(2025, 7, 25); // 8月25日
-        this.semesterEnd = new Date(2025, 11, 6);   // 12月6日
-        
-        // 工作時間表：2025年8月1日至11月30日
-        this.workStart = new Date(2025, 7, 1);     // 8月1日
-        this.workEnd = new Date(2025, 10, 30);     // 11月30日
+        // 舊學期課程數據（用於歷史查看，如果需要的話）
+        this.oldCourses = {
+            'DNS001': { name: 'DNS001', title: '數據科學前沿分析研究', day: 2, time: '09:00-12:00', color: 'dns001', location: 'N104' },
+            'DNS002': { name: 'DNS002', title: '數據挖掘理論、系統與技術', day: 4, time: '15:30-18:30', color: 'dns002', location: 'N104' },
+            'DNS003': { name: 'DNS003', title: '大數據決策與應用', day: 1, time: '12:15-15:15', color: 'dns003', location: 'N104' },
+            'DNS016': { name: 'DNS016', title: '智慧城市發展的數據建築', day: 5, time: '09:00-12:00', color: 'dns016', location: 'N104' }
+        };
+
+        // 學期定義
+        this.semesters = [
+            {
+                // 2025 秋季
+                start: new Date(2025, 7, 25), // 8月25日
+                end: new Date(2025, 11, 6),   // 12月6日
+                courses: this.oldCourses
+            },
+            {
+                // 2026 春季 (新學期)
+                start: new Date(2026, 0, 5),  // 1月5日
+                end: new Date(2026, 4, 2),    // 5月2日
+                courses: this.courses
+            }
+        ];
+
+        // 工作時間表定義 (支援多個區間)
+        this.workSchedules = [
+            {
+                start: new Date(2025, 7, 1),   // 2025-08-01
+                end: new Date(2025, 10, 30),   // 2025-11-30
+                anchorDate: new Date(2025, 7, 1), // 循環起始點
+                cycleShift: 0 // 起始偏移量 (0=Rest)
+            },
+            {
+                start: new Date(2026, 0, 2),   // 2026-01-02
+                end: new Date(2026, 4, 31),    // 2026-05-31
+                anchorDate: new Date(2026, 0, 2),
+                cycleShift: 0 // 1月2日是休息日(Index 0)
+            }
+        ];
         
         // 工作班次定義（5天循環）
+        // 順序: 休息日 -> 晚上更 -> 下午更 -> 早上更 -> 通宵更 -> 循環
         this.workShifts = [
             { name: '休息日', time: '', type: 'rest', color: 'rest' },
             { name: '晚上更', time: '18:00-24:00', type: 'evening', color: 'work-evening' },
@@ -61,48 +99,20 @@ class CalendarApp {
         
         // 校曆重要日期
         this.schoolEvents = {
-            '2025-08-25': {
-                type: 'event',
-                title: '開學升旗儀式',
-                description: '地點：中葡樓花園\n對象：全校學生',
-                time: '全天'
-            },
-            '2025-09-06': {
-                type: 'event', 
-                title: '迎新行者活動開始',
-                description: '地點：澳門各歷史文化景點、黑沙海灘、氹仔校區\n對象：新生',
-                time: '全天'
-            },
-            '2025-09-07': {
-                type: 'event',
-                title: '迎新行者活動結束', 
-                description: '地點：澳門各歷史文化景點、黑沙海灘、氹仔校區\n對象：新生',
-                time: '全天'
-            },
-            '2025-09-12': {
-                type: 'event',
-                title: '交換生歡迎會',
-                description: '地點：CLG201A 及 CLG201B\n對象：國際學生、歷屆和應屆交流學生',
-                time: '16:00-18:00'
-            },
-            '2025-09-15': {
-                type: 'event',
-                title: '交換項目宣講會', 
-                description: '地點：HG01 會議廳\n對象：全校學生',
-                time: '16:00-17:00'
-            },
-            '2025-10-01': {
-                type: 'holiday',
-                title: '國慶假期',
-                description: '中華人民共和國國慶節',
-                time: '全天'
-            },
-            '2025-12-06': {
-                type: 'event',
-                title: '學期結束',
-                description: '第一學期課程結束',
-                time: '全天'
-            }
+            '2026-01-01': { type: 'holiday', title: '元旦', description: '新年假期', time: '全天' },
+            '2026-02-17': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
+            '2026-02-18': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
+            '2026-02-19': { type: 'holiday', title: '農曆新年', description: '春節假期', time: '全天' },
+            '2026-03-30': { type: 'holiday', title: '復活節', description: '復活節假期', time: '全天' },
+            '2026-03-31': { type: 'holiday', title: '復活節', description: '復活節假期', time: '全天' },
+            '2026-04-04': { type: 'holiday', title: '清明節', description: '清明節假期', time: '全天' },
+            '2026-05-01': { type: 'holiday', title: '勞動節', description: '勞動節假期', time: '全天' },
+            '2026-05-02': { type: 'event', title: '學期結束', description: '第二學期課程結束', time: '全天' },
+            // 保留2025年的部分重要日期供查閱
+            '2025-12-20': { type: 'holiday', title: '澳門特區成立紀念日', description: '澳門特區成立紀念日', time: '全天' },
+            '2025-12-22': { type: 'holiday', title: '冬至', description: '冬至', time: '全天' },
+            '2025-12-24': { type: 'holiday', title: '聖誕節前夕', description: '聖誕節前夕', time: '全天' },
+            '2025-12-25': { type: 'holiday', title: '聖誕節', description: '聖誕節', time: '全天' }
         };
         
         // 月份名稱
@@ -172,13 +182,13 @@ class CalendarApp {
             this.currentYear++;
         }
         
-        // 限制顯示範圍：2025年8月到12月
+        // 限制顯示範圍：2025年8月到2026年6月 (擴大範圍以包含兩個學期)
         if (this.currentYear < 2025 || (this.currentYear === 2025 && this.currentMonth < 7)) {
             this.currentYear = 2025;
             this.currentMonth = 7;
-        } else if (this.currentYear > 2025 || (this.currentYear === 2025 && this.currentMonth > 11)) {
-            this.currentYear = 2025;
-            this.currentMonth = 11;
+        } else if (this.currentYear > 2026 || (this.currentYear === 2026 && this.currentMonth > 5)) {
+            this.currentYear = 2026;
+            this.currentMonth = 5;
         }
         
         this.renderCalendar();
@@ -213,13 +223,13 @@ class CalendarApp {
         this.currentYear = today.getFullYear();
         this.currentMonth = today.getMonth();
         
-        // 限制顯示範圍：2025年8月到12月
+        // 限制顯示範圍 check
         if (this.currentYear < 2025 || (this.currentYear === 2025 && this.currentMonth < 7)) {
             this.currentYear = 2025;
             this.currentMonth = 7;
-        } else if (this.currentYear > 2025 || (this.currentYear === 2025 && this.currentMonth > 11)) {
-            this.currentYear = 2025;
-            this.currentMonth = 11;
+        } else if (this.currentYear > 2026 || (this.currentYear === 2026 && this.currentMonth > 5)) {
+            this.currentYear = 2026;
+            this.currentMonth = 5;
         }
         
         this.renderCalendar();
@@ -364,15 +374,18 @@ class CalendarApp {
     getCoursesForDate(date) {
         const coursesForDay = [];
         
-        // 檢查是否在學期範圍內
-        if (date < this.semesterStart || date > this.semesterEnd) {
+        // 查找對應的學期
+        const semester = this.semesters.find(sem => date >= sem.start && date <= sem.end);
+        
+        if (!semester) {
             return coursesForDay;
         }
         
         const dayOfWeek = date.getDay();
+        const activeCourses = semester.courses;
         
         // 檢查每門課程
-        Object.values(this.courses).forEach(course => {
+        Object.values(activeCourses).forEach(course => {
             if (course.day === dayOfWeek) {
                 coursesForDay.push(course);
             }
@@ -397,18 +410,23 @@ class CalendarApp {
     }
     
     getWorkShiftForDate(date) {
-        // 檢查是否在工作期間內
-        if (date < this.workStart || date > this.workEnd) {
+        // 查找符合的工作排程區間
+        const schedule = this.workSchedules.find(sch => date >= sch.start && date <= sch.end);
+        
+        if (!schedule) {
             return null;
         }
         
-        // 計算從工作開始日期（8月1日）到當前日期的天數
-        const startDate = new Date(2025, 7, 1); // 8月1日
-        const diffTime = date.getTime() - startDate.getTime();
+        // 計算從循環起始日期到當前日期的天數
+        const diffTime = date.getTime() - schedule.anchorDate.getTime();
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         
+        // 確保 diffDays 為正數（處理可能的時區邊界問題）
+        if (diffDays < 0) return null;
+        
         // 計算在5天循環中的位置（0-4）
-        const cyclePosition = diffDays % 5;
+        // 考慮初始偏移量 cycleShift (如果有的話)
+        const cyclePosition = (diffDays + schedule.cycleShift) % 5;
         
         // 返回對應的班次
         return this.workShifts[cyclePosition];
@@ -696,23 +714,23 @@ class CalendarApp {
                 
                 /* 原有樣式 */
                 .event-item.holiday {
-                    border-left: 4px solid var(--course-dns001);
+                    border-left: 4px solid var(--holiday-color);
                 }
                 .event-item.event {
                     border-left: 4px solid var(--event-color);
                 }
-                .course-detail.dns001 {
-                    border-left: 4px solid var(--course-dns001);
-                }
-                .course-detail.dns002 {
-                    border-left: 4px solid var(--course-dns002);
-                }
-                .course-detail.dns003 {
-                    border-left: 4px solid var(--course-dns003);
-                }
-                .course-detail.dns016 {
-                    border-left: 4px solid var(--course-dns016);
-                }
+                /* 新課程樣式 */
+                .course-detail.dns012 { border-left: 4px solid var(--course-dns012); }
+                .course-detail.dns013 { border-left: 4px solid var(--course-dns013); }
+                .course-detail.dns015 { border-left: 4px solid var(--course-dns015); }
+                .course-detail.dns004 { border-left: 4px solid var(--course-dns004); }
+                
+                /* 舊課程樣式 */
+                .course-detail.dns001 { border-left: 4px solid var(--course-dns001); }
+                .course-detail.dns002 { border-left: 4px solid var(--course-dns002); }
+                .course-detail.dns003 { border-left: 4px solid var(--course-dns003); }
+                .course-detail.dns016 { border-left: 4px solid var(--course-dns016); }
+                
                 .courses-today h4 {
                     margin-bottom: var(--spacing-md);
                     color: var(--text-primary);

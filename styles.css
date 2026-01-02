@@ -14,11 +14,17 @@
     --primary-purple: #E6B3FF;
     --primary-orange: #FFD1B3;
     
-    /* 課程顏色 */
-    --course-dns001: #FF6B9D;  /* 粉紅 */
-    --course-dns002: #4ECDC4;  /* 青綠 */
-    --course-dns003: #45B7D1;  /* 藍色 */
-    --course-dns016: #F9CA24;  /* 黃色 */
+    /* 課程顏色 - 2026第二學期更新 */
+    --course-dns012: #FF6B9D;  /* 粉紅 - AI & Bayesian */
+    --course-dns013: #4ECDC4;  /* 青綠 - Social Network */
+    --course-dns015: #45B7D1;  /* 藍色 - Data Analysis */
+    --course-dns004: #F9CA24;  /* 黃色 - Project */
+    
+    /* 舊課程顏色保留供參考 */
+    --course-dns001: #FF6B9D;
+    --course-dns002: #4ECDC4;
+    --course-dns003: #45B7D1;
+    --course-dns016: #F9CA24;
     
     /* 工作班次顏色 */
     --work-morning: #8E44AD;    /* 紫色 - 早上更 */
@@ -103,7 +109,7 @@ body {
 }
 
 .title i {
-    color: var(--course-dns001);
+    color: var(--course-dns012);
 }
 
 .subtitle {
@@ -339,7 +345,7 @@ body {
 
 .day.holiday {
     background: var(--holiday-color);
-    color: var(--course-dns001);
+    color: var(--course-dns012);
     font-weight: 600;
     border-color: rgba(255, 107, 157, 0.2);
 }
@@ -394,25 +400,31 @@ body {
 }
 
 /* 課程顏色指示器 */
-.course-indicator.dns001 {
-    background: var(--course-dns001);
+.course-indicator.dns012 {
+    background: var(--course-dns012);
     box-shadow: 0 0 3px rgba(255, 107, 157, 0.5);
 }
 
-.course-indicator.dns002 {
-    background: var(--course-dns002);
+.course-indicator.dns013 {
+    background: var(--course-dns013);
     box-shadow: 0 0 3px rgba(78, 205, 196, 0.5);
 }
 
-.course-indicator.dns003 {
-    background: var(--course-dns003);
+.course-indicator.dns015 {
+    background: var(--course-dns015);
     box-shadow: 0 0 3px rgba(69, 183, 209, 0.5);
 }
 
-.course-indicator.dns016 {
-    background: var(--course-dns016);
+.course-indicator.dns004 {
+    background: var(--course-dns004);
     box-shadow: 0 0 3px rgba(249, 202, 36, 0.5);
 }
+
+/* 保留舊課程CSS類 */
+.course-indicator.dns001 { background: var(--course-dns001); }
+.course-indicator.dns002 { background: var(--course-dns002); }
+.course-indicator.dns003 { background: var(--course-dns003); }
+.course-indicator.dns016 { background: var(--course-dns016); }
 
 /* 其他活動指示器 */
 .course-indicator.event {
@@ -632,21 +644,16 @@ body {
     flex-shrink: 0;
 }
 
-.course-dns001 .course-color {
-    background: var(--course-dns001);
-}
+.course-dns012 .course-color { background: var(--course-dns012); }
+.course-dns013 .course-color { background: var(--course-dns013); }
+.course-dns015 .course-color { background: var(--course-dns015); }
+.course-dns004 .course-color { background: var(--course-dns004); }
 
-.course-dns002 .course-color {
-    background: var(--course-dns002);
-}
-
-.course-dns003 .course-color {
-    background: var(--course-dns003);
-}
-
-.course-dns016 .course-color {
-    background: var(--course-dns016);
-}
+/* 保留舊課程CSS */
+.course-dns001 .course-color { background: var(--course-dns001); }
+.course-dns002 .course-color { background: var(--course-dns002); }
+.course-dns003 .course-color { background: var(--course-dns003); }
+.course-dns016 .course-color { background: var(--course-dns016); }
 
 .course-info {
     flex: 1;
@@ -693,7 +700,7 @@ body {
 .resource-link:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px var(--shadow-color);
-    border-color: var(--course-dns001);
+    border-color: var(--course-dns012);
     background: linear-gradient(135deg, var(--bg-secondary), #FFF8FB);
 }
 
@@ -701,7 +708,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--course-dns001), var(--course-dns002));
+    background: linear-gradient(135deg, var(--course-dns012), var(--course-dns013));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -734,7 +741,7 @@ body {
 }
 
 .resource-link:hover .resource-action {
-    color: var(--course-dns001);
+    color: var(--course-dns012);
     transform: translateX(2px);
 }
 
